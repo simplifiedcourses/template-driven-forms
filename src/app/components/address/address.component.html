@@ -1,0 +1,34 @@
+<div class="form--horizontal-split">
+  <div scControlWrapper>
+    <label>
+      <span>Street</span>
+      <input type="text" [ngModel]="address?.street" name="street"/>
+    </label>
+  </div>
+  <div scControlWrapper>
+    <label>
+      <span>Number</span>
+      <input type="text" [ngModel]="address?.number" name="number"/>
+    </label>
+  </div>
+</div>
+<div class="form--horizontal-split">
+  <div scControlWrapper>
+    <label>
+      <span>City</span>
+      <input type="text" [ngModel]="address?.city" name="city"/>
+    </label>
+  </div>
+  <div scControlWrapper>
+    <label>
+      <span>Zipcode</span>
+      <input type="text" [ngModel]="address?.zipcode" name="zipcode"/>
+    </label>
+  </div>
+</div>
+<div scControlWrapper>
+  <label>
+    <span>Country</span>
+    <input type="text" [ngModel]="address?.country" name="country"/>
+  </label>
+</div>

@@ -1,0 +1,110 @@
+/* Add application styles & imports to this file! */
+/* Add application styles & imports to this file! */
+* {
+    font-family: 'Poppins';
+    font-size: 0.9rem;
+}
+h1 {
+    font-size:3rem;
+}
+h3 {
+    font-size: 1.5rem;
+}
+.input-wrapper--invalid {
+    select,
+    input[type='text'],
+    input[type='password'],
+    input[type='number'] {
+        border-color: #774771;
+        background-color: #d7c5d5;
+    }
+    input[type='radio'] {
+        border-color: #774771;
+    }
+    color: #774771;
+    span {
+        color: #774771;
+    }
+}
+select,
+input[type='text'],
+input[type='password'],
+input[type='number'] {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 16px 8px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    background: #fff;
+    &:hover {
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    }
+    &:disabled {
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+        background: #f1f1f1;
+    }
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    span {
+        display: flex;
+        color: #477777;
+        font-size: 1rem;
+        padding-bottom: 8px;
+    }
+}
+form {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    width: 500px;
+    @media screen and (max-width: 768px) {
+        width: 350px;
+    }
+    background: #f6f7fc;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .buttons {
+        margin-top: 16px;
+        margin-left: 150px;
+    }
+    .other-gender {
+        margin-top: 16px;
+        margin-left: 150px;
+    }
+
+}
+button {
+    border-radius: 8px;
+    border: none;
+    background: #477577;
+    color: #fff;
+    padding: 8px 16px;
+    &:hover {
+        background: #0c7c7c;
+    }
+}
+button:disabled {
+    opacity: 0.35
+}
+.form--horizontal-split {
+    display: flex;
+    width: 100%;
+    > :first-child{
+        margin-right: 8px;
+    }
+}
+.radiobuttons--horizontal{
+    display: flex;
+    .radiobutton__wrapper{
+        margin-right: 8px;
+    }
+}
+
+fieldset {
+    border: none;
+    width: 100%;
+}

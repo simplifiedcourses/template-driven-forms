@@ -1,0 +1,17 @@
+.phonenumbers, .phonenumbers__values {
+  display: flex;
+  flex-direction: column;
+}
+
+.phonenumbers__input-with-button {
+  display: flex;
+  width: 100%;
+  input {
+    flex: 1;
+  }
+}
+
+button {
+  margin-left: 8px;
+}
+

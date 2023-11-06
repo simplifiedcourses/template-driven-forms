@@ -1,0 +1,12 @@
+<div class="input-wrapper__content">
+  <ng-content></ng-content>
+</div>
+<div class="input-wrapper__errors">
+  <ul *ngIf="!ngModelGroup && ngModel?.control?.errors && ngModel?.touched">
+    <li *ngFor="let error of ngModel?.control?.errors?.['errors']">{{error}}</li>
+  </ul>
+
+  <ul *ngIf="ngModelGroup?.control?.errors && ngModelGroup?.touched">
+    <li *ngFor="let error of ngModelGroup?.control?.errors?.['errors']">{{error}}</li>
+  </ul>
+</div>

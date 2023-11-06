@@ -36,12 +36,15 @@
             }
           },
           "options": {
-            "assets": [],
             "index": "src/index.html",
             "main": "src/main.ts",
             "outputPath": "dist/demo",
             "scripts": [],
-            "styles": ["src/global_styles.css"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": ["src/global_styles.scss"],
             "tsConfig": "src/tsconfig.app.json"
           }
         },

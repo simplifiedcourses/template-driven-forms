@@ -1,0 +1,166 @@
+<a href="https://simplified.courses" target="_blank" class="logo">
+  <img src="assets/simplified-logo.png" alt="">
+</a>
+<br>
+<h3>Test it out</h3>
+<ul>
+  <li>Show validation errors on blur</li>
+  <li>Show validation errors on submit</li>
+  <li>When first name is <strong>Brecht</strong>: Set gender to male</li>
+  <li>When first name is <strong>Brecht</strong> and last name is <strong>Billiet</strong>: Set age and passwords</li>
+  <li>When first name is <strong>Luke</strong>: Fetch <strong>Luke Skywalker from the swapi api</strong></li>
+  <li>When age is below 18, make Emergency contact required</li>
+  <li>When age is of legal age, disable Emergency contact</li>
+  <li>There should be at least one phone number</li>
+  <li>Phone numbers should not be empty</li>
+  <li>When gender is <strong>other</strong>, show Specify gender</li>
+  <li>When gender is <strong>other</strong>, make Specify gender required</li>
+  <li>Password is required</li>
+  <li>Confirm password is only required when password is filled in</li>
+  <li>Passwords should match, but only check if both are filled in</li>
+  <li>Billing address is required</li>
+  <li>Show shipping address only when needed (otherwise remove from DOM)</li>
+  <li>If shipping address is different from billing address, make it required</li>
+  <li>If shipping address is different from billing address, make sure they are not the same</li>
+  <li>When providing shipping address and toggling the checkbox back and forth, make sure the state is kept</li>
+  <li>When clicking the Fetch data button, load data, disable the form, and patch and re-enable the form</li>
+</ul>
+<button (click)="fetchData()">Fetch data</button>
+<br>
+<form (ngSubmit)="onSubmit()"
+      [formValue]="formValue()"
+      [suite]="suite"
+      [alwaysTriggerValidations]="true"
+      (validChange)="formValid.set($event || false)"
+      (formValueChange)="setFormValue($event)">
+  <fieldset [disabled]="vm.loading">
+    <h1>Purchase form</h1>
+    <div class="form--horizontal-split">
+      <div scControlWrapper>
+        <label>
+          <span>First name</span>
+          <input type="text" [ngModel]="vm.formValue.firstName" name="firstName"/>
+        </label>
+      </div>
+      <div scControlWrapper>
+        <label>
+          <span>Last name</span>
+          <input type="text" [ngModel]="vm.formValue.lastName" name="lastName"/>
+        </label>
+      </div>
+    </div>
+    <div class="form--horizontal-split">
+      <div scControlWrapper>
+        <label>
+          <span>Age</span>
+          <input type="number" [ngModel]="vm.formValue.age" name="age"/>
+        </label>
+      </div>
+      <div scControlWrapper>
+        <label>
+          <span>Emergency contact</span>
+          <input type="text" [disabled]="vm.emergencyContactDisabled" [ngModel]="vm.formValue.emergencyContact"
+                 name="emergencyContact"/>
+        </label>
+      </div>
+    </div>
+    <div scControlWrapper ngModelGroup="phonenumbers">
+      <sc-phonenumbers [phonenumbers]="vm.formValue.phonenumbers?.values || {}">
+      </sc-phonenumbers>
+    </div>
+    <div scControlWrapper>
+      <label>
+        <span>Gender</span>
+        <div class="radiobuttons--horizontal">
+        <span class="radiobutton__wrapper">
+          Male
+          <input
+            type="radio"
+            [ngModel]="vm.formValue.gender"
+            name="gender"
+            value="male"
+          />
+        </span>
+          <span class="radiobutton__wrapper">
+          Female
+          <input
+            type="radio"
+            [ngModel]="vm.formValue.gender"
+            name="gender"
+            value="female"
+          />
+        </span>
+          <span class="radiobutton__wrapper">
+          Other
+          <input
+            type="radio"
+            [ngModel]="vm.formValue.gender"
+            name="gender"
+            value="other"
+          />
+        </span>
+        </div>
+      </label>
+    </div>
+    <div scControlWrapper *ngIf="vm.showGenderOther">
+      <label>
+        <span>Specify gender</span>
+        <input type="text" [ngModel]="vm.formValue.genderOther"
+               name="genderOther">
+      </label>
+    </div>
+    <div scControlWrapper ngModelGroup="passwords">
+      <div class="form--horizontal-split">
+        <div scControlWrapper>
+          <label>
+            <span>Password</span>
+            <input type="password" [ngModel]="vm.formValue.passwords?.password" name="password"/>
+          </label>
+        </div>
+        <div scControlWrapper>
+          <label>
+            <span>Confirm</span>
+            <input type="password" [ngModel]="vm.formValue.passwords?.confirmPassword" name="confirmPassword"/>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div scControlWrapper>
+      <label>
+        <span>Product</span>
+        <select name="productId" [ngModel]="vm.formValue.productId">
+          <option *ngFor="let product of products(); trackBy: tracker" [value]="product.id">{{product.name}}</option>
+        </select>
+      </label>
+    </div>
+    <div scControlWrapper ngModelGroup="addresses">
+      <div scControlWrapper ngModelGroup="billingAddress">
+        <h3>Billing address</h3>
+        <sc-address [address]="vm.formValue.addresses?.billingAddress"></sc-address>
+      </div>
+      <label scControlWrapper>
+        <span>Shipping address is different from billing address</span>
+        <input type="checkbox"
+               [ngModel]="vm.formValue.addresses?.shippingAddressDifferentFromBillingAddress"
+               name="shippingAddressDifferentFromBillingAddress">
+      </label>
+      <div scControlWrapper ngModelGroup="shippingAddress" *ngIf="vm.showShippingAddress">
+        <h3>Shipping Address</h3>
+        <sc-address [address]="vm.shippingAddress"></sc-address>
+      </div>
+    </div>
+    <div class="buttons">
+      <button type="button">Reset</button>&nbsp;
+      <button type="submit">Submit</button>
+    </div>
+  </fieldset>
+
+</form>
+<br>
+<a class="course" href="https://www.simplified.courses/complex-angular-template-driven-forms">
+  <img src="assets/course.jpeg" alt="Advanced Template-driven forms course">
+</a>
+<h3>The value of the form</h3>
+<pre id="json-data">
+    {{vm.formValue|json}}
+</pre>
