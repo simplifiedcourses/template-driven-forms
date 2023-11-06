@@ -4,5 +4,7 @@
   flex-direction: column;
   padding-top: 20px;
   align-items:center;
-
+  p, ul {
+    width: 500px;
+  }
 }

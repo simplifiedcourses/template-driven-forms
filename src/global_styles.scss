@@ -110,3 +110,21 @@ fieldset {
     margin: 0;
     padding: 0;
 }
+.logo {
+    img {
+        width: 100px;
+    }
+
+    margin-bottom: 20px;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.course {
+    img {
+        width: 500px;
+    }
+}
