@@ -31,15 +31,16 @@ function getGroupPath(
   for (const key in formGroup.controls) {
     if (formGroup.controls.hasOwnProperty(key)) {
       const ctrl = formGroup.get(key);
+      if (ctrl === control) {
+        return key;
+      }
       if (ctrl instanceof FormGroup) {
-        const path = getControlPath(ctrl, controlName, control);
+        const path = getGroupPath(ctrl, controlName, control);
         if (path) {
           return key + '.' + path;
         }
       }
-      if (ctrl === control) {
-        return key;
-      }
+    
     }
   }
   return '';
