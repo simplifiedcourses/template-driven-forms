@@ -8,9 +8,10 @@ import { debounceTime, filter, switchMap } from 'rxjs';
 import { LukeService } from '../../luke.service';
 import { PhonenumbersComponent } from '../phonenumbers/phonenumbers.component';
 import { AddressModel } from '../../models/address.model';
-import { purchaseFormValidations } from '../../validations/purchase.validations';
 import { templateDrivenForms } from '../../template-driven-forms/template-driven.forms';
 import { validateShape } from '../../template-driven-forms/shape-validation';
+import { createPurchaseValidationSuite } from '../../validations/purchase.validations';
+import { SwapiService } from 'src/app/swapi.service';
 
 @Component({
   selector: 'sc-purchase-form',
@@ -21,13 +22,14 @@ import { validateShape } from '../../template-driven-forms/shape-validation';
 })
 export class PurchaseFormComponent {
   private readonly lukeService = inject(LukeService);
+  private readonly swapiService = inject(SwapiService);
   private readonly productService = inject(ProductService);
   public readonly products = toSignal(this.productService.getAll());
   public tracker = (i: number) => i;
   protected readonly formValue = signal<FormModel>({});
   protected readonly formValid = signal<boolean>(false);
   protected readonly loading = signal<boolean>(false);
-  protected readonly suite = purchaseFormValidations;
+  protected readonly suite = createPurchaseValidationSuite(this.swapiService);
   private readonly shippingAddress = signal<AddressModel>({});
 
   private readonly viewModel = computed(() => {

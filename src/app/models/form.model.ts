@@ -3,6 +3,7 @@ import { PhonenumberModel, phonenumberShape } from './phonenumber.model';
 import { DeepRequired } from '../template-driven-forms/deep-required';
 
 export type FormModel = Partial<{
+  userId: string;
   firstName: string;
   lastName: string;
   age: number;
@@ -24,6 +25,7 @@ export type FormModel = Partial<{
 
 
 export const formShape: DeepRequired<FormModel> = {
+  userId: '',
   firstName: '',
   lastName: '',
   age: 0,

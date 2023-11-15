@@ -18,8 +18,8 @@ export class ControlWrapperComponent {
 
   @HostBinding('class.input-wrapper--invalid')
   public get invalid() {
-    if ((!this.ngModelGroup && this.ngModel?.control?.errors && this.ngModel?.touched)
-      || (this.ngModelGroup?.control?.errors && this.ngModelGroup.touched)) {
+    if ((!this.ngModelGroup && this.ngModel?.control?.errors && (this.ngModel?.touched || this.ngModel?.dirty))
+      || (this.ngModelGroup?.control?.errors && (this.ngModelGroup.touched || this.ngModelGroup?.dirty))) {
       return true;
     }
     return false;

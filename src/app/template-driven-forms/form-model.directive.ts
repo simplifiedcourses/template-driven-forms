@@ -1,25 +1,26 @@
 import { Directive, inject } from '@angular/core';
-import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
+import { AbstractControl, AsyncValidator, NG_ASYNC_VALIDATORS, ValidationErrors } from '@angular/forms';
 import { FormDirective } from './form.directive';
-import { createValidator, getFormControlField } from './utils';
+import { createAsyncValidator, getFormControlField } from './utils';
+import { Observable } from 'rxjs';
+
 
 @Directive({
   selector: '[ngModel]',
   standalone: true,
   providers: [
-    { provide: NG_VALIDATORS, useExisting: FormModelDirective, multi: true },
+    { provide: NG_ASYNC_VALIDATORS, useExisting: FormModelDirective, multi: true },
   ],
 })
-export class FormModelDirective implements Validator {
+export class FormModelDirective implements AsyncValidator {
   private readonly formDirective = inject(FormDirective);
 
-  public validate(control: AbstractControl): ValidationErrors | null {
+  public validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const { ngForm, suite, formValue } = this.formDirective;
     if (!suite || !formValue) {
       throw new Error('suite or formValue is missing');
     }
     const field = getFormControlField(ngForm.control, control);
-    const validator = createValidator(field, formValue, suite);
-    return validator(control);
+    return createAsyncValidator(field, formValue, suite)(control) as Observable<ValidationErrors|null>;
   }
 }

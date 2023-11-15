@@ -1,7 +1,7 @@
 import { Directive, inject, Input, Output } from '@angular/core';
 import { AbstractControl, FormGroup, NgForm } from '@angular/forms';
-import { debounceTime, map } from 'rxjs';
-import { SuiteResult } from 'vest';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { Suite } from 'vest';
 
 @Directive({
   selector: 'form',
@@ -11,7 +11,7 @@ export class FormDirective<T> {
   // Inject its own `NgForm` instance
   public readonly ngForm = inject(NgForm, { self: true });
   @Input() public formValue: T | null = null;
-  @Input() public suite: ((formValue: T, field: string) => SuiteResult<string, string>) | null = null;
+  @Input() public suite: Suite<string, string, (model: T, field: string) => void> | null = null;
 
   @Output() public readonly formValueChange = this.ngForm.form.valueChanges.pipe(
     debounceTime(0)
@@ -34,12 +34,12 @@ export class FormDirective<T> {
       });
   };
 
-  @Input() public set validationConfig(v: { [key: string]: string[] }) {
+  @Input() public set validationConfig(v: {[key:string]: string[]}) {
     Object.keys(v).forEach((key) => {
       this.formValueChange
         .pipe(
-          debounceTime(0),
-          map(res => res[key])
+          map(() => this.ngForm.form.get(key)?.value),
+          distinctUntilChanged()
         )
         .subscribe((form) => {
           v[key].forEach((path) => {

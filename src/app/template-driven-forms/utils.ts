@@ -1,6 +1,7 @@
-import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
-import { SuiteResult } from 'vest';
+import { AbstractControl, AsyncValidatorFn, FormGroup, ValidatorFn } from '@angular/forms';
+import { Suite, SuiteResult } from 'vest';
 import { set, cloneDeep } from 'lodash';
+import { Observable } from 'rxjs';
 
 function getControlPath(
   rootForm: FormGroup,
@@ -109,5 +110,25 @@ export function createValidator<T>(
     const result = suite(mod, field);
     const errors = result.getErrors()[field];
     return errors ? { error: errors[0], errors } : null;
+  };
+}
+
+
+export function createAsyncValidator<T>(
+  field: string,
+  model: T,
+  suite: Suite<string, string, (model: T, field: string) => void>,
+): AsyncValidatorFn {
+  return (control: AbstractControl) => {
+    const mod = cloneDeep(model);
+    set(mod as object, field, control.value); // Update the property with path
+
+    return new Observable((observer) => {
+      suite(mod, field).done((result) => {
+        const errors = result.getErrors()[field];
+        observer.next((errors ? { error: errors[0], errors } : null));
+        observer.complete();
+      })
+    })
   };
 }

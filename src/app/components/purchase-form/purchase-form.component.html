@@ -20,6 +20,7 @@
   <li>If shipping address is different from billing address, make sure they are not the same</li>
   <li>When providing shipping address and toggling the checkbox back and forth, make sure the state is kept</li>
   <li>When clicking the Fetch data button, load data, disable the form, and patch and re-enable the form</li>
+  <li>When the user id is taken, perform async validation</li>
 </ul>
 <button (click)="fetchData()">Fetch data</button>
 <br>
@@ -31,6 +32,12 @@
       (formValueChange)="setFormValue($event)">
   <fieldset [disabled]="vm.loading">
     <h1>Purchase form</h1>
+    <div scControlWrapper>
+      <label>
+        <span>User id</span>
+        <input type="text" [ngModel]="vm.formValue.userId" name="userId"/>
+      </label>
+    </div>
     <div class="form--horizontal-split">
       <div scControlWrapper>
         <label>
