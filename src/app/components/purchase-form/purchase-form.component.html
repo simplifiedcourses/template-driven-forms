@@ -26,7 +26,7 @@
 <form (ngSubmit)="onSubmit()"
       [formValue]="formValue()"
       [suite]="suite"
-      [alwaysTriggerValidations]="true"
+      [validationConfig]="validationConfig"
       (validChange)="formValid.set($event || false)"
       (formValueChange)="setFormValue($event)">
   <fieldset [disabled]="vm.loading">

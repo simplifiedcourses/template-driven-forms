@@ -41,6 +41,14 @@ export class PurchaseFormComponent {
     }
   });
 
+  protected readonly validationConfig: {
+    [key: string]: string[];
+  } = {
+      'age': ['emergencyContact'],
+      'passwords.password': ['passwords.confirmPassword'],
+      'gender': ['genderOther']
+    };
+
   constructor() {
     const firstName = computed(() => this.formValue().firstName);
     const lastName = computed(() => this.formValue().lastName);
@@ -73,14 +81,14 @@ export class PurchaseFormComponent {
         switchMap(() => this.lukeService.getLuke())
       )
       .subscribe((luke) => {
-        this.formValue.update(v => ({...v, ...luke}))
+        this.formValue.update(v => ({ ...v, ...luke }))
       })
   }
 
   protected setFormValue(v: FormModel): void {
     this.formValue.set(v);
     validateShape(v, formShape);
-    if(v.addresses?.shippingAddress){
+    if (v.addresses?.shippingAddress) {
       this.shippingAddress.set(v.addresses.shippingAddress);
     }
   }
@@ -90,15 +98,15 @@ export class PurchaseFormComponent {
   }
 
   protected onSubmit(): void {
-    if(this.formValid()){
+    if (this.formValid()) {
       console.log(this.formValue())
     }
   }
 
-  protected fetchData(){
+  protected fetchData() {
     this.loading.set(true);
     this.lukeService.getLuke().subscribe((luke) => {
-      this.formValue.update(v => ({...v, ...luke}))
+      this.formValue.update(v => ({ ...v, ...luke }))
       this.loading.set(false);
     })
   }
