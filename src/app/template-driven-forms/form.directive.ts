@@ -18,12 +18,14 @@ export class FormDirective<T> {
     map(() => this.ngForm.form.getRawValue())
   );
 
-  @Output() public readonly dirtyChange = this.formValueChange.pipe(
-    map(() => this.ngForm.dirty)
+  @Output() public readonly dirtyChange = this.ngForm.form.valueChanges.pipe(
+    map(() => this.ngForm.dirty),
+    distinctUntilChanged()
   );
 
-  @Output() public readonly validChange = this.formValueChange.pipe(
+  @Output() public readonly validChange =  this.ngForm.form.valueChanges.pipe(
     map(() => this.ngForm.valid),
+    distinctUntilChanged()
   );
 
   @Input()
