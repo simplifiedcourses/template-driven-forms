@@ -1,14 +1,14 @@
-import { Directive, inject, Input, Output } from '@angular/core';
+import { AfterViewInit, Directive, inject, Input, OnDestroy, Output } from '@angular/core';
 import { AbstractControl, FormGroup, NgForm } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
 import { Suite } from 'vest';
 
 @Directive({
   selector: 'form',
   standalone: true,
 })
-export class FormDirective<T> {
-  // Inject its own `NgForm` instance
+export class FormDirective<T> implements OnDestroy {
+  private readonly destroy$$ = new Subject<void>();
   public readonly ngForm = inject(NgForm, { self: true });
   @Input() public formValue: T | null = null;
   @Input() public suite: Suite<string, string, (model: T, field: string) => void> | null = null;
@@ -42,7 +42,8 @@ export class FormDirective<T> {
       this.formValueChange
         .pipe(
           map(() => this.ngForm.form.get(key)?.value),
-          distinctUntilChanged()
+          distinctUntilChanged(),
+          takeUntil(this.destroy$$)
         )
         .subscribe((form) => {
           v[key].forEach((path) => {
@@ -56,6 +57,9 @@ export class FormDirective<T> {
     this.ngForm.ngSubmit.subscribe(() => {
       this.ngForm.form.markAllAsTouched();
     });
+  }
+  public ngOnDestroy(): void {
+    this.destroy$$.next();
   }
 
   private updateValueAndValidityRecursive(control: AbstractControl): void {
