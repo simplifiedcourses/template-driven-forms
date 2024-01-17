@@ -106,7 +106,7 @@ export function createValidator<T>(
 ): ValidatorFn {
   return (control: AbstractControl) => {
     const mod = cloneDeep(model);
-    set(mod as object, field, control.value); // Update the property with path
+    set(mod as object, field, control.getRawValue()); // Update the property with path
     const result = suite(mod, field);
     const errors = result.getErrors()[field];
     return errors ? { error: errors[0], errors } : null;
@@ -121,7 +121,7 @@ export function createAsyncValidator<T>(
 ): AsyncValidatorFn {
   return (control: AbstractControl) => {
     const mod = cloneDeep(model);
-    set(mod as object, field, control.value); // Update the property with path
+    set(mod as object, field, control.getRawValue()); // Update the property with path
 
     return new Observable((observer) => {
       suite(mod, field).done((result) => {
