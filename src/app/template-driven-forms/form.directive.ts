@@ -1,7 +1,7 @@
-import { AfterViewInit, Directive, inject, Input, OnDestroy, Output } from '@angular/core';
+import { Directive, inject, Input, OnDestroy, Output } from '@angular/core';
 import { AbstractControl, FormGroup, NgForm } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
-import { Suite } from 'vest';
+import { StaticSuite } from 'vest';
 
 @Directive({
   selector: 'form',
@@ -11,7 +11,7 @@ export class FormDirective<T> implements OnDestroy {
   private readonly destroy$$ = new Subject<void>();
   public readonly ngForm = inject(NgForm, { self: true });
   @Input() public formValue: T | null = null;
-  @Input() public suite: Suite<string, string, (model: T, field: string) => void> | null = null;
+  @Input() public suite: StaticSuite<string, string, (model: T, field: string) => void> | null = null;
 
   @Output() public readonly formValueChange = this.ngForm.form.valueChanges.pipe(
     debounceTime(0),

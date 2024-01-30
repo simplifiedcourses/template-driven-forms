@@ -1,4 +1,4 @@
-import { create, enforce, omitWhen, only, test } from 'vest';
+import { enforce, omitWhen, only, staticSuite, test } from 'vest';
 import { FormModel } from '../models/form.model';
 import { addressValidations } from './address.validations';
 import { phonenumberValidations } from './phonenumber.validations';
@@ -6,7 +6,7 @@ import { SwapiService } from '../swapi.service';
 import { fromEvent, lastValueFrom, takeUntil } from 'rxjs';
 
 export const createPurchaseValidationSuite = (swapiService: SwapiService) => {
-  return create(
+  return staticSuite(
     (model: FormModel, field: string) => {
       only(field);
 

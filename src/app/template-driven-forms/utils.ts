@@ -1,5 +1,5 @@
 import { AbstractControl, AsyncValidatorFn, FormGroup, ValidatorFn } from '@angular/forms';
-import { Suite, SuiteResult } from 'vest';
+import { StaticSuite, SuiteResult } from 'vest';
 import { set, cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
 
@@ -102,7 +102,7 @@ export function getFormGroupField(rootForm: FormGroup, control: AbstractControl)
 export function createValidator<T>(
   field: string,
   model: T,
-  suite: (model: T, field: string) => SuiteResult<string, string>
+  suite: StaticSuite<string, string, (model: T, field: string) => void>,
 ): ValidatorFn {
   return (control: AbstractControl) => {
     const mod = cloneDeep(model);
@@ -117,7 +117,7 @@ export function createValidator<T>(
 export function createAsyncValidator<T>(
   field: string,
   model: T,
-  suite: Suite<string, string, (model: T, field: string) => void>,
+  suite: StaticSuite<string, string, (model: T, field: string) => void>,
 ): AsyncValidatorFn {
   return (control: AbstractControl) => {
     const mod = cloneDeep(model);
