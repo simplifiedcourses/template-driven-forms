@@ -132,3 +132,31 @@ export function createAsyncValidator<T>(
     })
   };
 }
+export function mergeValuesAndRawValues<T>(form: FormGroup): T {
+  // Retrieve the standard values (respecting references)
+  const value = { ...form.value };
+
+  // Retrieve the raw values (including disabled values)
+  const rawValue = form.getRawValue();
+
+  // Recursive function to merge rawValue into value
+  function mergeRecursive(target: any, source: any) {
+    Object.keys(source).forEach(key => {
+      if (!target.hasOwnProperty(key)) {
+        // If the key is not in the target, add it directly (for disabled fields)
+        target[key] = source[key];
+      } else if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+        // If the value is an object, merge it recursively
+        mergeRecursive(target[key], source[key]);
+      }
+      // If the target already has the key with a primitive value, it's left as is to maintain references
+    });
+  }
+
+  // Start the merging process only if the form is a FormGroup
+  if (form instanceof FormGroup) {
+    mergeRecursive(value, rawValue);
+  }
+
+  return value;
+}

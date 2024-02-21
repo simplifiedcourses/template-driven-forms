@@ -2,6 +2,7 @@ import { Directive, inject, Input, OnDestroy, Output } from '@angular/core';
 import { AbstractControl, FormGroup, NgForm } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
 import { StaticSuite } from 'vest';
+import { mergeValuesAndRawValues } from './utils';
 
 @Directive({
   selector: 'form',
@@ -15,7 +16,7 @@ export class FormDirective<T> implements OnDestroy {
 
   @Output() public readonly formValueChange = this.ngForm.form.valueChanges.pipe(
     debounceTime(0),
-    map(() => this.ngForm.form.getRawValue())
+    map(() => mergeValuesAndRawValues<T>(this.ngForm.form))
   );
 
   @Output() public readonly dirtyChange = this.ngForm.form.valueChanges.pipe(
