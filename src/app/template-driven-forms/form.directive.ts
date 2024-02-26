@@ -19,12 +19,12 @@ export class FormDirective<T> implements OnDestroy {
     map(() => mergeValuesAndRawValues<T>(this.ngForm.form))
   );
 
-  @Output() public readonly dirtyChange = this.ngForm.form.valueChanges.pipe(
+  @Output() public readonly dirtyChange = this.formValueChange.pipe(
     map(() => this.ngForm.dirty),
     distinctUntilChanged()
   );
 
-  @Output() public readonly validChange =  this.ngForm.form.valueChanges.pipe(
+  @Output() public readonly validChange =  this.formValueChange.pipe(
     map(() => this.ngForm.valid),
     distinctUntilChanged()
   );
