@@ -30,7 +30,7 @@ export class FormModelGroupDirective implements Validator {
           debounceTime(0),
           takeUntilDestroyed(),
         )
-        .subscribe((control) => {
+        .subscribe((control: AbstractControl) => {
           this.debounced.set(true);
           control.updateValueAndValidity({ onlySelf: true, emitEvent: false });
         });
