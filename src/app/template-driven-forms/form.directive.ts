@@ -20,12 +20,12 @@ export class FormDirective<T> implements OnDestroy {
   );
 
   @Output() public readonly dirtyChange = this.formValueChange.pipe(
-    map(() => this.ngForm.dirty),
+    map(() => this.ngForm.form.dirty),
     distinctUntilChanged()
   );
 
   @Output() public readonly validChange =  this.formValueChange.pipe(
-    map(() => this.ngForm.valid),
+    map(() => this.ngForm.form.valid),
     distinctUntilChanged()
   );
 
