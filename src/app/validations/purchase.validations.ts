@@ -10,6 +10,7 @@ export const createPurchaseValidationSuite = (swapiService: SwapiService) => {
     (model: FormModel, field: string) => {
       only(field);
 
+      console.log('vest', field);
       omitWhen((!model.userId), () => {
         test('userId', 'userId is already taken', async ({ signal }) => {
           await lastValueFrom(

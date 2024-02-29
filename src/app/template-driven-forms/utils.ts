@@ -1,7 +1,7 @@
-import { AbstractControl, AsyncValidatorFn, FormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { StaticSuite, SuiteResult } from 'vest';
 import { set, cloneDeep } from 'lodash';
-import { Observable } from 'rxjs';
+import { Observable, tap, ReplaySubject, debounceTime, map, take, switchMap } from 'rxjs';
 
 function getControlPath(
   rootForm: FormGroup,
@@ -41,7 +41,7 @@ function getGroupPath(
           return key + '.' + path;
         }
       }
-    
+
     }
   }
   return '';
@@ -72,7 +72,7 @@ function findControlNameInGroup(
  */
 export function getFormControlField(rootForm: FormGroup, control: AbstractControl): string {
   const parentFormGroup = control.parent?.controls;
-  if(!parentFormGroup){
+  if (!parentFormGroup) {
     throw new Error('An ngModel should always be wrapped in a parent FormGroup');
   }
   const abstractControlName = findControlNameInGroup(parentFormGroup, control);
@@ -86,33 +86,24 @@ export function getFormControlField(rootForm: FormGroup, control: AbstractContro
  */
 export function getFormGroupField(rootForm: FormGroup, control: AbstractControl): string {
   const parentFormGroup = control.parent?.controls;
-  if(!parentFormGroup){
+  if (!parentFormGroup) {
     throw new Error('An ngModelGroup should always be wrapped in a parent FormGroup');
   }
   const abstractControlName = findControlNameInGroup(parentFormGroup, control);
   return getGroupPath(rootForm, abstractControlName, control);
 }
 
-/**
- * Creates an Angular ValidatorFn that uses a Vest suite behind the scenes
- * @param field
- * @param model
- * @param suite
- */
-export function createValidator<T>(
-  field: string,
-  model: T,
-  suite: StaticSuite<string, string, (model: T, field: string) => void>,
-): ValidatorFn {
-  return (control: AbstractControl) => {
-    const mod = cloneDeep(model);
-    set(mod as object, field, control.getRawValue()); // Update the property with path
-    const result = suite(mod, field);
-    const errors = result.getErrors()[field];
-    return errors ? { error: errors[0], errors } : null;
-  };
+type CacheItem = Partial<{
+  sub$$: ReplaySubject<unknown>;
+  debounced: Observable<any>; // Adjust the Observable type based on your needs
+}>
+
+type Cache = {
+  [field: string]: CacheItem;
 }
 
+const cache: Cache = {
+}
 
 export function createAsyncValidator<T>(
   field: string,
@@ -122,16 +113,29 @@ export function createAsyncValidator<T>(
   return (control: AbstractControl) => {
     const mod = cloneDeep(model);
     set(mod as object, field, control.getRawValue()); // Update the property with path
+    if (!cache[field]) {
+      cache[field] = {
+        sub$$: new ReplaySubject(0),
+      }
+      cache[field].debounced = cache[field].sub$$!.pipe(debounceTime(0))
+    }
+    cache[field].sub$$!.next(mod);
 
-    return new Observable((observer) => {
-      suite(mod, field).done((result) => {
-        const errors = result.getErrors()[field];
-        observer.next((errors ? { error: errors[0], errors } : null));
-        observer.complete();
+    return cache[field].debounced!.pipe(
+      take(1),
+      switchMap(() => {
+        return new Observable((observer) => {
+          suite(mod, field).done((result) => {
+            const errors = result.getErrors()[field];
+            observer.next((errors ? { error: errors[0], errors } : null));
+            observer.complete();
+          })
+        }) as Observable<ValidationErrors | null>
       })
-    })
+    );
   };
 }
+
 export function mergeValuesAndRawValues<T>(form: FormGroup): T {
   // Retrieve the standard values (respecting references)
   const value = { ...form.value };
