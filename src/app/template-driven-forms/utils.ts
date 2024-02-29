@@ -1,7 +1,7 @@
 import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { StaticSuite, SuiteResult } from 'vest';
+import { StaticSuite } from 'vest';
 import { set, cloneDeep } from 'lodash';
-import { Observable, tap, ReplaySubject, debounceTime, map, take, switchMap } from 'rxjs';
+import { Observable, ReplaySubject, debounceTime, map, take, switchMap } from 'rxjs';
 
 function getControlPath(
   rootForm: FormGroup,
@@ -95,7 +95,7 @@ export function getFormGroupField(rootForm: FormGroup, control: AbstractControl)
 
 type CacheItem = Partial<{
   sub$$: ReplaySubject<unknown>;
-  debounced: Observable<any>; // Adjust the Observable type based on your needs
+  debounced: Observable<any>;
 }>
 
 type Cache = {
@@ -146,7 +146,7 @@ export function mergeValuesAndRawValues<T>(form: FormGroup): T {
   // Recursive function to merge rawValue into value
   function mergeRecursive(target: any, source: any) {
     Object.keys(source).forEach(key => {
-      if (!target.hasOwnProperty(key)) {
+      if (target[key] === undefined) {
         // If the key is not in the target, add it directly (for disabled fields)
         target[key] = source[key];
       } else if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {

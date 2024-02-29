@@ -31,15 +31,6 @@ export class FormDirective<T> implements OnDestroy {
     distinctUntilChanged()
   );
 
-  @Input()
-  public set alwaysTriggerValidations(v: boolean) {
-    this.ngForm.form.valueChanges
-      .pipe(debounceTime(0))
-      .subscribe(() => {
-        this.updateValueAndValidityRecursive(this.ngForm.form);
-      });
-  };
-
   @Input() public set validationConfig(v: {[key:string]: string[]}) {
     Object.keys(v).forEach((key) => {
       this.formValueChange
@@ -48,9 +39,9 @@ export class FormDirective<T> implements OnDestroy {
           distinctUntilChanged(),
           takeUntil(this.destroy$$)
         )
-        .subscribe((form) => {
+        .subscribe(() => {
           v[key].forEach((path) => {
-            this.ngForm.form.get(path)?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+            this.ngForm.form.get(path)?.updateValueAndValidity({ onlySelf: false, emitEvent: false });
           })
         })
     })
@@ -63,17 +54,6 @@ export class FormDirective<T> implements OnDestroy {
   }
   public ngOnDestroy(): void {
     this.destroy$$.next();
-  }
-
-  private updateValueAndValidityRecursive(control: AbstractControl): void {
-    if (control instanceof FormGroup) {
-      control.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-      Object.values(control.controls).forEach(subControl => {
-        this.updateValueAndValidityRecursive(subControl);
-      });
-    } else {
-      control.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-    }
   }
 }
 
