@@ -35,6 +35,7 @@ export class PurchaseFormComponent {
   private readonly viewModel = computed(() => {
     return {
       formValue: this.formValue(),
+      formValid: this.formValid(),
       emergencyContactDisabled: (this.formValue().age || 0) >= 18,
       showShippingAddress: this.formValue().addresses?.shippingAddressDifferentFromBillingAddress,
       showGenderOther: this.formValue().gender === 'other',

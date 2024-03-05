@@ -1,7 +1,7 @@
 import { Directive, inject } from '@angular/core';
 import { AbstractControl, AsyncValidator, NG_ASYNC_VALIDATORS, ValidationErrors } from '@angular/forms';
 import { FormDirective } from './form.directive';
-import { createAsyncValidator, getFormGroupField } from './utils';
+import { getFormGroupField } from './utils';
 import { Observable } from 'rxjs';
 
 @Directive({
@@ -20,6 +20,6 @@ export class FormModelGroupDirective implements AsyncValidator {
       throw new Error('suite or formValue is missing');
     }
     const field = getFormGroupField(ngForm.control, control);
-    return createAsyncValidator(field, formValue, suite)(control) as Observable<ValidationErrors | null>
+    return this.formDirective.createAsyncValidator(field, formValue, suite)(control) as Observable<ValidationErrors | null>
   }
 }

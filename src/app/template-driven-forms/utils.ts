@@ -1,7 +1,4 @@
-import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { StaticSuite } from 'vest';
-import { set, cloneDeep } from 'lodash';
-import { Observable, ReplaySubject, debounceTime, map, take, switchMap } from 'rxjs';
+import { AbstractControl, FormGroup} from '@angular/forms';
 
 function getControlPath(
   rootForm: FormGroup,
@@ -93,48 +90,6 @@ export function getFormGroupField(rootForm: FormGroup, control: AbstractControl)
   return getGroupPath(rootForm, abstractControlName, control);
 }
 
-type CacheItem = Partial<{
-  sub$$: ReplaySubject<unknown>;
-  debounced: Observable<any>;
-}>
-
-type Cache = {
-  [field: string]: CacheItem;
-}
-
-const cache: Cache = {
-}
-
-export function createAsyncValidator<T>(
-  field: string,
-  model: T,
-  suite: StaticSuite<string, string, (model: T, field: string) => void>,
-): AsyncValidatorFn {
-  return (control: AbstractControl) => {
-    const mod = cloneDeep(model);
-    set(mod as object, field, control.getRawValue()); // Update the property with path
-    if (!cache[field]) {
-      cache[field] = {
-        sub$$: new ReplaySubject(0),
-      }
-      cache[field].debounced = cache[field].sub$$!.pipe(debounceTime(0))
-    }
-    cache[field].sub$$!.next(mod);
-
-    return cache[field].debounced!.pipe(
-      take(1),
-      switchMap(() => {
-        return new Observable((observer) => {
-          suite(mod, field).done((result) => {
-            const errors = result.getErrors()[field];
-            observer.next((errors ? { error: errors[0], errors } : null));
-            observer.complete();
-          })
-        }) as Observable<ValidationErrors | null>
-      })
-    );
-  };
-}
 
 export function mergeValuesAndRawValues<T>(form: FormGroup): T {
   // Retrieve the standard values (respecting references)
