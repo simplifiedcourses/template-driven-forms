@@ -25,7 +25,6 @@ export class PurchaseFormComponent {
   private readonly swapiService = inject(SwapiService);
   private readonly productService = inject(ProductService);
   public readonly products = toSignal(this.productService.getAll());
-  public tracker = (i: number) => i;
   protected readonly formValue = signal<FormModel>({});
   protected readonly formValid = signal<boolean>(false);
   protected readonly loading = signal<boolean>(false);

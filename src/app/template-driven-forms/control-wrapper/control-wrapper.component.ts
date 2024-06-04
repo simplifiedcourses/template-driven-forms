@@ -1,11 +1,11 @@
 import { Component, ContentChild, HostBinding, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { AbstractControl, NgModel, NgModelGroup } from '@angular/forms';
 
 @Component({
   selector: '[scControlWrapper]',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './control-wrapper.component.html',
   styleUrls: ['./control-wrapper.component.scss']
 })
@@ -26,7 +26,7 @@ export class ControlWrapperComponent {
 
   @HostBinding('class.input-wrapper--invalid')
   public get invalid() {
-    return this.control?.touched && this.previousError;
+    return this.control?.touched && this.errors;//&& this.previousError;
   }
 
   public get errors(): string[] | undefined {

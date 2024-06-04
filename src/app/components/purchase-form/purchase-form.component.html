@@ -24,145 +24,151 @@
 </ul>
 <button (click)="fetchData()">Fetch data</button>
 <br>
-<form (ngSubmit)="onSubmit()"
-      [formValue]="formValue()"
-      [suite]="suite"
-      [validationConfig]="validationConfig"
-      (validChange)="formValid.set($event || false)"
-      (formValueChange)="setFormValue($event)">
-  <fieldset [disabled]="vm.loading">
-    <h1>Purchase form</h1>
-    <div scControlWrapper>
-      <label>
-        <span>User id</span>
-        <input type="text" [ngModel]="vm.formValue.userId" name="userId"/>
-      </label>
-    </div>
-    <div class="form--horizontal-split">
+  <form (ngSubmit)="onSubmit()"
+    [formValue]="formValue()"
+    [suite]="suite"
+    [validationConfig]="validationConfig"
+    (validChange)="formValid.set($event || false)"
+    (formValueChange)="setFormValue($event)">
+    <fieldset [disabled]="vm.loading">
+      <h1>Purchase form</h1>
       <div scControlWrapper>
         <label>
-          <span>First name</span>
-          <input type="text" [ngModel]="vm.formValue.firstName" name="firstName"/>
+          <span>User id</span>
+          <input type="text" [ngModel]="vm.formValue.userId" name="userId"/>
         </label>
       </div>
-      <div scControlWrapper>
-        <label>
-          <span>Last name</span>
-          <input type="text" [ngModel]="vm.formValue.lastName" name="lastName"/>
-        </label>
-      </div>
-    </div>
-    <div class="form--horizontal-split">
-      <div scControlWrapper>
-        <label>
-          <span>Age</span>
-          <input type="number" [ngModel]="vm.formValue.age" name="age"/>
-        </label>
-      </div>
-      <div scControlWrapper>
-        <label>
-          <span>Emergency contact</span>
-          <input type="text" [disabled]="vm.emergencyContactDisabled" [ngModel]="vm.formValue.emergencyContact"
-                 name="emergencyContact"/>
-        </label>
-      </div>
-    </div>
-    <div scControlWrapper ngModelGroup="phonenumbers">
-      <sc-phonenumbers [phonenumbers]="vm.formValue.phonenumbers?.values || {}">
-      </sc-phonenumbers>
-    </div>
-    <div scControlWrapper>
-      <label>
-        <span>Gender</span>
-        <div class="radiobuttons--horizontal">
-        <span class="radiobutton__wrapper">
-          Male
-          <input
-            type="radio"
-            [ngModel]="vm.formValue.gender"
-            name="gender"
-            value="male"
-          />
-        </span>
-          <span class="radiobutton__wrapper">
-          Female
-          <input
-            type="radio"
-            [ngModel]="vm.formValue.gender"
-            name="gender"
-            value="female"
-          />
-        </span>
-          <span class="radiobutton__wrapper">
-          Other
-          <input
-            type="radio"
-            [ngModel]="vm.formValue.gender"
-            name="gender"
-            value="other"
-          />
-        </span>
-        </div>
-      </label>
-    </div>
-    <div scControlWrapper *ngIf="vm.showGenderOther">
-      <label>
-        <span>Specify gender</span>
-        <input type="text" [ngModel]="vm.formValue.genderOther"
-               name="genderOther">
-      </label>
-    </div>
-    <div scControlWrapper ngModelGroup="passwords">
       <div class="form--horizontal-split">
         <div scControlWrapper>
           <label>
-            <span>Password</span>
-            <input type="password" [ngModel]="vm.formValue.passwords?.password" name="password"/>
+            <span>First name</span>
+            <input type="text" [ngModel]="vm.formValue.firstName" name="firstName"/>
           </label>
         </div>
         <div scControlWrapper>
           <label>
-            <span>Confirm</span>
-            <input type="password" [ngModel]="vm.formValue.passwords?.confirmPassword" name="confirmPassword"/>
+            <span>Last name</span>
+            <input type="text" [ngModel]="vm.formValue.lastName" name="lastName"/>
           </label>
         </div>
       </div>
-    </div>
-    <div scControlWrapper>
-      <label>
-        <span>Product</span>
-        <select name="productId" [ngModel]="vm.formValue.productId">
-          <option *ngFor="let product of products(); trackBy: tracker" [value]="product.id">{{product.name}}</option>
-        </select>
-      </label>
-    </div>
-    <div scControlWrapper ngModelGroup="addresses">
-      <div scControlWrapper ngModelGroup="billingAddress">
-        <h3>Billing address</h3>
-        <sc-address [address]="vm.formValue.addresses?.billingAddress"></sc-address>
+      <div class="form--horizontal-split">
+        <div scControlWrapper>
+          <label>
+            <span>Age</span>
+            <input type="number" [ngModel]="vm.formValue.age" name="age"/>
+          </label>
+        </div>
+        <div scControlWrapper>
+          <label>
+            <span>Emergency contact</span>
+            <input type="text" [disabled]="vm.emergencyContactDisabled" [ngModel]="vm.formValue.emergencyContact"
+              name="emergencyContact"/>
+          </label>
+        </div>
       </div>
-      <label scControlWrapper>
-        <span>Shipping address is different from billing address</span>
-        <input type="checkbox"
-               [ngModel]="vm.formValue.addresses?.shippingAddressDifferentFromBillingAddress"
-               name="shippingAddressDifferentFromBillingAddress">
-      </label>
-      <div scControlWrapper ngModelGroup="shippingAddress" *ngIf="vm.showShippingAddress">
-        <h3>Shipping Address</h3>
-        <sc-address [address]="vm.shippingAddress"></sc-address>
+      <div scControlWrapper ngModelGroup="phonenumbers">
+        <sc-phonenumbers [phonenumbers]="vm.formValue.phonenumbers?.values || {}">
+        </sc-phonenumbers>
       </div>
-    </div>
-    <div class="buttons">
-      <button type="button">Reset</button>&nbsp;
-      <button type="submit">Submit</button>
-    </div>
-  </fieldset>
+      <div scControlWrapper>
+        <label>
+          <span>Gender</span>
+          <div class="radiobuttons--horizontal">
+            <span class="radiobutton__wrapper">
+              Male
+              <input
+                type="radio"
+                [ngModel]="vm.formValue.gender"
+                name="gender"
+                value="male"
+                />
+            </span>
+            <span class="radiobutton__wrapper">
+              Female
+              <input
+                type="radio"
+                [ngModel]="vm.formValue.gender"
+                name="gender"
+                value="female"
+                />
+            </span>
+            <span class="radiobutton__wrapper">
+              Other
+              <input
+                type="radio"
+                [ngModel]="vm.formValue.gender"
+                name="gender"
+                value="other"
+                />
+            </span>
+          </div>
+        </label>
+      </div>
+      @if (vm.showGenderOther) {
+        <div scControlWrapper>
+          <label>
+            <span>Specify gender</span>
+            <input type="text" [ngModel]="vm.formValue.genderOther"
+              name="genderOther">
+          </label>
+        </div>
+      }
+      <div scControlWrapper ngModelGroup="passwords">
+        <div class="form--horizontal-split">
+          <div scControlWrapper>
+            <label>
+              <span>Password</span>
+              <input type="password" [ngModel]="vm.formValue.passwords?.password" name="password"/>
+            </label>
+          </div>
+          <div scControlWrapper>
+            <label>
+              <span>Confirm</span>
+              <input type="password" [ngModel]="vm.formValue.passwords?.confirmPassword" name="confirmPassword"/>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div scControlWrapper>
+        <label>
+          <span>Product</span>
+          <select name="productId" [ngModel]="vm.formValue.productId">
+            @for (product of products(); track product.id) {
+              <option [value]="product.id">{{product.name}}</option>
+            }
+          </select>
+        </label>
+      </div>
+      <div scControlWrapper ngModelGroup="addresses">
+        <div scControlWrapper ngModelGroup="billingAddress">
+          <h3>Billing address</h3>
+          <sc-address [address]="vm.formValue.addresses?.billingAddress"></sc-address>
+        </div>
+        <label scControlWrapper>
+          <span>Shipping address is different from billing address</span>
+          <input type="checkbox"
+            [ngModel]="vm.formValue.addresses?.shippingAddressDifferentFromBillingAddress"
+            name="shippingAddressDifferentFromBillingAddress">
+        </label>
+        @if (vm.showShippingAddress) {
+          <div scControlWrapper ngModelGroup="shippingAddress">
+            <h3>Shipping Address</h3>
+            <sc-address [address]="vm.shippingAddress"></sc-address>
+          </div>
+        }
+      </div>
+      <div class="buttons">
+        <button type="button">Reset</button>&nbsp;
+        <button type="submit">Submit</button>
+      </div>
+    </fieldset>
 
-</form>
-<br>
-<p>Valid: {{vm.formValid}}</p>
+  </form>
+  <br>
+    <p>Valid: {{vm.formValid}}</p>
 
-<h3>The value of the form</h3>
-<pre id="json-data">
-    {{vm.formValue|json}}
-</pre>
+    <h3>The value of the form</h3>
+    <pre id="json-data">
+      {{vm.formValue|json}}
+    </pre>

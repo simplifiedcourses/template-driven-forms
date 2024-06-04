@@ -3,6 +3,8 @@
 </div>
 <div class="input-wrapper__errors">
   <ul [hidden]="!invalid">
-    <li *ngFor="let error of errors">{{error}}</li>
+    @for (error of errors; track error) {
+      <li>{{error}}</li>
+    }
   </ul>
 </div>

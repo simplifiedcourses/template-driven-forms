@@ -3,12 +3,14 @@
   <div>
     <div class="phonenumbers">
       <div ngModelGroup="values" class="phonenumbers__values">
-        <div scControlWrapper *ngFor="let item of phonenumbers|keyvalue; trackBy: tracker">
-          <div class="phonenumbers__input-with-button">
-            <input type="text" name="{{item.key}}" [ngModel]="phonenumbers[item.key]">
-            <button type="button" (click)="removePhonenumber(item.key)">Remove</button>
+        @for (item of phonenumbers|keyvalue; track tracker) {
+          <div scControlWrapper>
+            <div class="phonenumbers__input-with-button">
+              <input type="text" name="{{item.key}}" [ngModel]="phonenumbers[item.key]">
+              <button type="button" (click)="removePhonenumber(item.key)">Remove</button>
+            </div>
           </div>
-        </div>
+        }
       </div>
     </div>
     <div scControlWrapper>
